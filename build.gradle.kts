@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.3.21"
+    maven
 }
 
 dependencies {
@@ -14,6 +15,8 @@ dependencies {
 repositories {
     jcenter()
 }
+
+group = "berlin.preussler.junit5"
 
 tasks.withType<Test> {
     useJUnitPlatform()
