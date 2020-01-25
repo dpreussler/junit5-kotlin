@@ -16,19 +16,6 @@ Usage:
 fun test(item: SomeClass)
 ```
 
-```groovy
-allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
-//...
-dependencies {
-	        implementation 'com.github.dpreussler:junit5-kotlin:-SNAPSHOT'
-	}
-```
-
 Can handle: 
 - nested sealed classes
 - singletons `object`
@@ -38,8 +25,24 @@ Can handle:
 You can pass in a `TypeFactory` for creating custom instances like for mocking
 
 
-License
-=======
+Get it:
+
+```groovy
+allprojects {
+    repositories {
+	    ...
+		maven { url 'https://jitpack.io' }
+    }
+}
+//...
+dependencies {
+    implementation 'com.github.dpreussler:junit5-kotlin:-SNAPSHOT'
+}
+```
+
+
+## License
+
 
 The MIT License (MIT)
 
