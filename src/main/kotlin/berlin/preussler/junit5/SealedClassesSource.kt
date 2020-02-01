@@ -27,7 +27,7 @@ import kotlin.reflect.KParameter
 @Target(AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 @ArgumentsSource(SealedClassesArgumentsProvider::class)
-internal annotation class SealedClassesSource(
+annotation class SealedClassesSource(
     val factoryClass: KClass<out TypeFactory> = DefaultTypeFactory::class
 ) {
 
