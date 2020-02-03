@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/dpreussler/junit5-kotlin.svg?branch=master)](https://travis-ci.org/dpreussler/junit5-kotlin) 
 
-[![](https://jitpack.io/v/dpreussler/junit5-kotlin.svg)](https://jitpack.io/#dpreussler/junit5-kotlin)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.jodamob.junit5/junit5-kotlin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.jodamob.junit5/junit5-kotlin)
+[![Jitpack](https://jitpack.io/v/dpreussler/junit5-kotlin.svg)](https://jitpack.io/#dpreussler/junit5-kotlin)
+
 
 # junit5-kotlin
 Extensions for Junit5 for Kotlin programming language
@@ -28,15 +30,8 @@ You can pass in a `TypeFactory` for creating custom instances like for mocking
 Get it:
 
 ```groovy
-allprojects {
-    repositories {
-	    //...   
-        maven { url 'https://jitpack.io' }
-    }
-}
-//...
 dependencies {
-    implementation 'com.github.dpreussler:junit5-kotlin:-SNAPSHOT'
+    implementation 'de.jodamob.junit5:junit5-kotlin:0.0.1'
 }
 ```
 

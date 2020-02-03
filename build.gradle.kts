@@ -6,10 +6,10 @@ plugins {
 }
 
 dependencies {
-    compile(kotlin("stdlib"))
-    compile(kotlin("reflect"))
-    compile(junit5("jupiter","5.6.0"))
-    compile(junit5("jupiter-params","5.6.0"))
+    implementation(kotlin("stdlib"))
+    implementation(kotlin("reflect"))
+    implementation(junit5("jupiter","5.6.0"))
+    implementation(junit5("jupiter-params","5.6.0"))
 }
 
 repositories {
@@ -29,3 +29,5 @@ tasks.withType<KotlinCompile>().configureEach {
 
 fun DependencyHandler.junit5(module: String, version: String? = null): Any =
     "org.junit.jupiter:junit-$module${version?.let { ":$version" } ?: ""}"
+
+apply(from= "publishing.gradle")

@@ -1,6 +1,9 @@
-package berlin.preussler.junit5
+package de.jodamob.junit5
 
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
 import kotlin.reflect.KClass
 
@@ -102,6 +105,7 @@ class SealedClassesSourceTest {
     }
 
     class CustomFactory : SealedClassesSource.TypeFactory {
-        override fun create(what: KClass<*>) = Custom.YouDontKnowMe(Custom.Me())
+        override fun create(what: KClass<*>) =
+            Custom.YouDontKnowMe(Custom.Me())
     }
 }

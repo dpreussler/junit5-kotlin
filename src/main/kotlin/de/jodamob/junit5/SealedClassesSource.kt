@@ -1,4 +1,4 @@
-package berlin.preussler.junit5
+package de.jodamob.junit5
 
 
 import org.junit.jupiter.api.extension.ExtensionContext

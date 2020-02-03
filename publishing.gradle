@@ -1,0 +1,78 @@
+repositories {
+    mavenCentral()
+}
+
+// Signing
+apply plugin: 'signing'
+signing {
+    sign configurations.archives
+}
+
+
+// Deploying
+apply plugin: 'maven'
+
+// Add Javadoc JAR and sources JAR to artifact
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+// Configure group ID, artifact ID, and version
+group = "de.jodamob.junit5"
+archivesBaseName = "junit5-kotlin"
+version = "0.0.1"
+
+// Build, sign, and upload
+uploadArchives {
+    repositories {
+        mavenDeployer {
+
+            // Sign POM
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            // Destination
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            // Add required metadata to POM
+            pom.project {
+                name 'junit5-kotlin'
+                packaging 'jar'
+                description 'SealedClassesSource for Parameterized tests for Junit5'
+                url 'https://github.com/dpreussler/junit5-kotlin'
+
+                scm {
+                    connection 'scm:git:git://github.com/dpreussler/junit5-kotlin.git'
+                    developerConnection 'scm:git:ssh://github.com/dpreussler/junit5-kotlin.git'
+                    url 'http://github.com/dpreussler/junit5-kotlin/tree/master'
+                }
+
+                licenses {
+                    license {
+                        name 'MIT'
+                        url 'https://github.com/dpreussler/junit5-kotlin/blob/master/LICENSE'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'dpreussler'
+                        name 'Danny Preussler'
+                    }
+                }
+            }
+        }
+    }
+}
