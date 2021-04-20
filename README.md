@@ -26,6 +26,25 @@ Can handle:
 
 You can pass in a `TypeFactory` for creating custom instances like for mocking
 
+You can extend the `DefaultTypeFactory` for creating custom instances while reusing the creation of constructors with single paramter constructors with basic types and empty constructors.
+
+
+```kotlin
+sealed class Fruit {
+  object Orange : Fruit()
+  object Banana : Fruit()
+  data class Apple(color: String) : Fruit()
+}
+
+class FruitTypeFactory : DefaultTypeFactory() {
+    override fun create(what: KClass<*>) = when (what) {
+        Apple::class -> Fruit.Apple(
+            color = "red"
+        )
+        else -> super.create(what)
+    }
+}
+```
 
 Get it:
 

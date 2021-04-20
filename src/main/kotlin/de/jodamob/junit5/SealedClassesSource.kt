@@ -38,7 +38,7 @@ annotation class SealedClassesSource(
 }
 
 // default factory that can return singletons and instances of classes with empty constructor
-internal class DefaultTypeFactory: SealedClassesSource.TypeFactory {
+open class DefaultTypeFactory: SealedClassesSource.TypeFactory {
 
     override fun create(what: KClass<*>): Any {
         return what.objectInstance ?: what.constructors.first().create()
