@@ -98,6 +98,45 @@ class SealedClassesSourceTest {
         }
     }
 
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class Include {
+
+        val items = mutableListOf<String>()
+
+        @AfterAll
+        fun check() {
+            Assertions.assertEquals(listOf("Mother", "Daughter", "GrandSon"), items)
+        }
+
+        @ParameterizedTest
+        @SealedClassesSource(names = ["Mother", "Daughter", "GrandSon"])
+        fun build(member: Family) {
+            items.add(member::class.simpleName!!)
+        }
+    }
+
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class Exclude {
+
+        val items = mutableListOf<String>()
+
+        @AfterAll
+        fun check() {
+            Assertions.assertEquals(listOf("Father", "Son", "GradDaughter"), items)
+        }
+
+        @ParameterizedTest
+        @SealedClassesSource(
+            names = ["Mother", "Daughter", "GrandSon"],
+            mode = SealedClassesSource.Mode.EXCLUDE
+        )
+        fun build(member: Family) {
+            items.add(member::class.simpleName!!)
+        }
+    }
+
     @ParameterizedTest
     @SealedClassesSource(factoryClass = CustomFactory::class)
     fun `can check custom types`(item: Custom) {
