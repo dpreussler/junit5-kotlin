@@ -28,7 +28,7 @@ artifacts {
 // Configure group ID, artifact ID, and version
 group = "de.jodamob.junit5"
 archivesBaseName = "junit5-kotlin"
-version = "0.0.1"
+version = "0.0.2"
 
 // Build, sign, and upload
 uploadArchives {
