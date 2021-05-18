@@ -46,6 +46,36 @@ class FruitTypeFactory : DefaultTypeFactory() {
 }
 ```
 
+Filter: 
+
+You can filter out a few values by using the names attribute.
+
+```kotlin
+sealed class Family {
+    class Mother: Family()
+    class Father: Family()
+    sealed class Children: Family() {
+        class Son: Children()
+        class Daughter: Children()
+        sealed class GrandChildren: Children() {
+            class GrandSon: GrandChildren()
+            class GradDaughter: GrandChildren()
+        }
+    }
+}
+
+@ParameterizedTest
+@SealedClassesSource(names = ["Mother", "Daughter", "GrandSon"])
+fun test(item: Family)
+```
+Or you can turn this around by setting the mode attribute to EXCLUDE
+
+```kotlin
+@ParameterizedTest
+@SealedClassesSource(names = ["Mother", "Daughter", "GrandSon"], mode = SealedClassesSource.Mode.EXCLUDE)
+fun test(item: Family)
+```
+
 Get it:
 
 ```groovy

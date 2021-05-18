@@ -28,12 +28,19 @@ import kotlin.reflect.KParameter
 @Retention(AnnotationRetention.RUNTIME)
 @ArgumentsSource(SealedClassesArgumentsProvider::class)
 annotation class SealedClassesSource(
-    val factoryClass: KClass<out TypeFactory> = DefaultTypeFactory::class
+    val factoryClass: KClass<out TypeFactory> = DefaultTypeFactory::class,
+    val names: Array<String> = [],
+    val mode: Mode = Mode.INCLUDE
 ) {
 
     // factory to create actual instances of a class
     interface TypeFactory {
         fun create(what: KClass<*>): Any
+    }
+
+    enum class Mode {
+        INCLUDE,
+        EXCLUDE
     }
 }
 
@@ -67,10 +74,12 @@ internal class SealedClassesArgumentsProvider : ArgumentsProvider, AnnotationCon
     private lateinit var source: SealedClassesSource
     private val factory by lazy { source.factoryClass.java.newInstance() }
 
+
     override fun provideArguments(context: ExtensionContext) =
         determineClass(context)
             .sealedSubclasses // children
             .squashed() // flatten the tree
+            .filter(source.names, source.mode)
             .map { factory.create(it) } // create instances
             .map { Arguments.of(it) } // convert to junit arguments
             .stream()
@@ -80,9 +89,24 @@ internal class SealedClassesArgumentsProvider : ArgumentsProvider, AnnotationCon
     }
 
     // flatten a tree and keep only leaves
-    private fun <T : Any> Collection<KClass<out T>>.squashed(): Collection<KClass<out T>> = flatMap {
+    private fun <T : Any> List<KClass<out T>>.squashed(): List<KClass<out T>> = flatMap {
         (if (it.sealedSubclasses.isEmpty()) listOf(it) else emptyList()) + it.sealedSubclasses.squashed<T>()
     }
+
+    private fun <T : Any> List<KClass<out T>>.filter(
+        names: Array<String>,
+        mode: SealedClassesSource.Mode
+    ): List<KClass<out T>> = filter { clazz ->
+        if (names.isNotEmpty()) {
+            when (mode) {
+                SealedClassesSource.Mode.EXCLUDE -> !names.contains(clazz.simpleName)
+                SealedClassesSource.Mode.INCLUDE -> names.contains(clazz.simpleName)
+            }
+        } else {
+            true
+        }
+    }
+
 
     // extracts the class from method parameter, inspired bu org.junit.jupiter.params.provider.EnumArgumentsProvider.determineEnumClass(ExtensionContext)
     private fun determineClass(context: ExtensionContext): KClass<*> {
