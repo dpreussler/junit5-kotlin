@@ -80,7 +80,7 @@ Get it:
 
 ```groovy
 dependencies {
-    implementation 'de.jodamob.junit5:junit5-kotlin:0.0.1'
+    implementation 'de.jodamob.junit5:junit5-kotlin:0.0.3'
 }
 ```
 
