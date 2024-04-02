@@ -64,6 +64,12 @@ open class DefaultTypeFactory: SealedClassesSource.TypeFactory {
             String::class -> ""
             Float::class -> 0f
             Long::class -> 0L
+            Boolean::class -> false
+            Throwable::class -> Throwable()
+            List::class -> emptyList<Any>()
+            Array::class -> emptyArray<Any>()
+            Map::class -> emptyMap<Any, Any>()
+            Set::class -> emptySet<Any>()
             else -> null
         }
     }
