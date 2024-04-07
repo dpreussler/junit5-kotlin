@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource
 import org.junit.jupiter.params.support.AnnotationConsumer
 import org.junit.platform.commons.util.Preconditions
 import kotlin.reflect.KClass
+import kotlin.reflect.KClassifier
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 
@@ -70,9 +71,21 @@ open class DefaultTypeFactory: SealedClassesSource.TypeFactory {
             Array::class -> emptyArray<Any>()
             Map::class -> emptyMap<Any, Any>()
             Set::class -> emptySet<Any>()
-            else -> null
+            else -> {
+                if (type.classifier?.isEnum() == true) {
+                    val enumJavaClass = (type.classifier as KClass<out Enum<*>>).javaObjectType
+                    java.lang.Enum.valueOf(
+                        enumJavaClass,
+                        enumJavaClass.fields.first().name
+                    )
+                } else null
+            }
         }
     }
+}
+
+private fun KClassifier.isEnum(): Boolean = (this as KClass<*>).supertypes.any { t ->
+    (t.classifier as KClass<out Any>).qualifiedName == "kotlin.Enum" }
 }
 
 internal class SealedClassesArgumentsProvider : ArgumentsProvider, AnnotationConsumer<SealedClassesSource> {

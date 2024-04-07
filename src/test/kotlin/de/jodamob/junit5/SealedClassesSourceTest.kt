@@ -35,6 +35,17 @@ sealed class Mixed {
     data class F(val item: Short): Mixed()
     data class G(val item: Byte): Mixed()
     data class H(val item1: String, val item2: Float): Mixed()
+    data class I(val list: List<String>): Mixed()
+    data class J(val list: List<String>): Mixed()
+    data class K(val list: Array<String>): Mixed()
+    data class L(val map: Set<String>): Mixed()
+    data class M(val map: Map<String, Any>): Mixed()
+
+    enum class Values{
+        VALUE_ONE, VALUE_TWO
+    }
+
+    data class N(val list: Values): Mixed()
 }
 
 sealed class Custom {
