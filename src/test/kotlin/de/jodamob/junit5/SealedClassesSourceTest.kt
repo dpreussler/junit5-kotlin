@@ -99,7 +99,7 @@ class SealedClassesSourceTest {
 
         @AfterAll
         fun check() {
-            Assertions.assertEquals(listOf("A", "B", "C", "D", "E", "F", "G", "H"), items)
+            Assertions.assertEquals(listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"), items)
         }
 
         @ParameterizedTest

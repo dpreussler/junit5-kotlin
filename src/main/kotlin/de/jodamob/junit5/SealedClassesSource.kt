@@ -7,10 +7,8 @@ import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.provider.ArgumentsSource
 import org.junit.jupiter.params.support.AnnotationConsumer
 import org.junit.platform.commons.util.Preconditions
-import kotlin.reflect.KClass
-import kotlin.reflect.KClassifier
-import kotlin.reflect.KFunction
-import kotlin.reflect.KParameter
+import java.util.Objects
+import kotlin.reflect.*
 
 /**
  * {@code @SealedClassesSource} is an junit ArgumentsSource for sealed classes.
@@ -58,7 +56,11 @@ open class DefaultTypeFactory: SealedClassesSource.TypeFactory {
 
     // grab known types for constructor arguments
     private fun KParameter.createArgument(): Any? {
-        return when(type.classifier) {
+        return type.createArgument()
+    }
+
+    private fun KType.createArgument(): Any? {
+        return when (classifier) {
             Int::class -> 0
             Byte::class -> 0.toByte()
             Short::class -> 0.toShort()
@@ -68,17 +70,24 @@ open class DefaultTypeFactory: SealedClassesSource.TypeFactory {
             Boolean::class -> false
             Throwable::class -> Throwable()
             List::class -> emptyList<Any>()
-            Array::class -> emptyArray<Any>()
             Map::class -> emptyMap<Any, Any>()
             Set::class -> emptySet<Any>()
-            else -> {
-                if (type.classifier?.isEnum() == true) {
-                    val enumJavaClass = (type.classifier as KClass<out Enum<*>>).javaObjectType
-                    java.lang.Enum.valueOf(
+            else -> when {
+                classifier?.isArray() == true -> {
+                    java.lang.reflect.Array.newInstance(
+                        arguments.first().type!!.createArgument()!!.javaClass,
+                        0
+                    )
+                }
+                classifier?.isEnum() == true -> {
+                    val enumJavaClass = (classifier as KClass<out Enum<*>>).javaObjectType
+                    Util.getEnumConstantByName(
                         enumJavaClass,
                         enumJavaClass.fields.first().name
                     )
-                } else null
+                }
+
+                else -> null
             }
         }
     }
@@ -86,7 +95,9 @@ open class DefaultTypeFactory: SealedClassesSource.TypeFactory {
 
 private fun KClassifier.isEnum(): Boolean = (this as KClass<*>).supertypes.any { t ->
     (t.classifier as KClass<out Any>).qualifiedName == "kotlin.Enum" }
-}
+
+private fun KClassifier.isArray(): Boolean = (this as KClass<*>).qualifiedName == "kotlin.Array"
+
 
 internal class SealedClassesArgumentsProvider : ArgumentsProvider, AnnotationConsumer<SealedClassesSource> {
 
